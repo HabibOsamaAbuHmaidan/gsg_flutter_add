@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gsg_flutter/question.dart';
@@ -34,28 +36,33 @@ class _QuizpageState extends State<Quizpage> {
   QuizBrint quizBrint = QuizBrint();
 
   List<Widget> scorekeeper = [];
+  int? _choice;
 
   void checkAnswer(bool userChoice) {
+    bool correctAnwer = quizBrint.getquestionAnswer();
+    setState(() {
+      if (correctAnwer = userChoice) {
+        scorekeeper.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      } else {
+        scorekeeper.add(Icon(Icons.close, color: Colors.red));
+      }
+    });
+
     if (quizBrint.isFinished()) {
       print("Finished");
-      Alert(context: context, title: "FINISHRD", desc: "you are done.").show();
-      setState(() {
-        quizBrint.reset();
-        scorekeeper.clear();
+      Timer(Duration(seconds: 2), () {
+        Alert(context: context, title: "FINISHRD", desc: "you are done.")
+            .show();
+        setState(() {
+          quizBrint.reset();
+          scorekeeper.clear();
+        });
       });
     } else {
-      bool correctAnwer = quizBrint.getquestionAnswer();
-      setState(() {
-        if (correctAnwer = userChoice) {
-          scorekeeper.add(Icon(
-            Icons.check,
-            color: Colors.green,
-          ));
-        } else {
-          scorekeeper.add(Icon(Icons.close, color: Colors.red));
-        }
-        quizBrint.nextQuestion();
-      });
+      quizBrint.nextQuestion();
     }
   }
 
@@ -64,7 +71,7 @@ class _QuizpageState extends State<Quizpage> {
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.black87,
+          backgroundColor: Colors.green.shade400,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +126,53 @@ class _QuizpageState extends State<Quizpage> {
               // TODO: Add your own signing config for the release build.
               Wrap(
                 children: scorekeeper,
-              )
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: const Text('Thomas Jefferson'),
+                      leading: Radio<int>(
+                        value: 1,
+                        groupValue: _choice,
+                        onChanged: (value) {
+                          print(value);
+
+                          setState(() {
+                            _choice = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Thomas Jefferson'),
+                      leading: Radio<int>(
+                        value: 2,
+                        groupValue: _choice,
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            _choice = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Thomas Jefferson'),
+                      leading: Radio<int>(
+                        value: 3,
+                        groupValue: _choice,
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {
+                            _choice = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
